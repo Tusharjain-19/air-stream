@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndiGo Inflight - Music</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <style>
+        .card.playing {
+            border: 2px solid var(--brand-accent);
+            transform: scale(1.05);
+        }
+
+        .content-wrapper {
+            padding-bottom: 120px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar scrolled">
+        <div class="logo">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movie.html">Movies</a></li>
+            <li><a href="song.html">Music</a></li>
+            <li><a href="book.html">E-Books</a></li>
+            <li><a href="game.html">Games</a></li>
+        </ul>
+    </nav>
+
+    <div class="content-wrapper">
+        <a href="index.html" class="back-link">← Back to Journey</a>
+        <h1 class="page-title">Inflight Audio</h1>
+
+        <div class="content-grid">
+            <!-- Ordinary -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/Alex Warren - Ordinary (Lyrics).mp3', './assets/images/ordinary alex warren poster.jpg', 'Ordinary', 'Alex Warren')">
+                <img src="./assets/images/ordinary alex warren poster.jpg" alt="Ordinary">
+                <div class="card-overlay">
+                    <div class="card-title">Ordinary</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Alex Warren</p>
+                </div>
+            </div>
+
+            <!-- Channa Ve -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/Channa Ve - Full Video  Bhoot - Part One_ The Haunted Ship  Vicky K & Bhumi P  Akhil & Mansheel.mp3', './assets/images/channa_ve.png', 'Channa Ve', 'Akhil & Mansheel')">
+                <img src="./assets/images/channa_ve.png" alt="Channa Ve">
+                <div class="card-overlay">
+                    <div class="card-title">Channa Ve</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Bhoot | Akhil</p>
+                </div>
+            </div>
+
+            <!-- Shape of You -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/Ed Sheeran & Diljit Dosanjh - Shape of You (Live in Birmingham 2024).mp3', './assets/images/Shape of You x Naina poster.jpg', 'Shape of You', 'Ed Sheeran x Diljit')">
+                <img src="./assets/images/Shape of You x Naina poster.jpg" alt="Shape of You">
+                <div class="card-overlay">
+                    <div class="card-title">Shape of You X Naina </div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Live | Birmingham</p>
+                </div>
+            </div>
+
+            <!-- Azul -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/GURU RANDHAWA - AZUL  MV.mp3', './assets/images/azUL by Guru Randhawa poster.jpg', 'AZUL', 'Guru Randhawa')">
+                <img src="./assets/images/azUL by Guru Randhawa poster.jpg" alt="AZUL">
+                <div class="card-overlay">
+                    <div class="card-title">AZUL</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Guru Randhawa</p>
+                </div>
+            </div>
+
+            <!-- Softly -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/SOFTLY (Official Music Video) KARAN AUJLA  IKKY  LATEST PUNJABI SONGS 2023.mp3', './assets/images/soFTLY by KARAN AUJLAposter.jpg', 'SOFTLY', 'Karan Aujla')">
+                <img src="./assets/images/soFTLY by KARAN AUJLAposter.jpg" alt="Softly">
+                <div class="card-overlay">
+                    <div class="card-title">SOFTLY</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Karan Aujla</p>
+                </div>
+            </div>
+
+            <!-- O Rangrez -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/O Rangrez - Lyrcial Video  Bhaag Milkha Bhaag  Farhan, Sonam  Shreya Ghoshal, Javed Bashir.mp3', './assets/images/O Rangrez poster.jpg', 'O Rangrez', 'Shreya Ghoshal & Javed Bashir')">
+                <img src="./assets/images/O Rangrez poster.jpg" alt="O Rangrez">
+                <div class="card-overlay">
+                    <div class="card-title">O Rangrez</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Bhaag Milkha Bhaag</p>
+                </div>
+            </div>
+
+            <!-- ROOTS -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/ROOTS - Bintu Pabra & KP Kundu  Teji Sandhu  Bamboo Beat  Pellet Drum Productions.mp3', './assets/images/ROOTSposter.jpg', 'ROOTS', 'Bintu Pabra & KP Kundu')">
+                <img src="./assets/images/ROOTSposter.jpg" alt="ROOTS">
+                <div class="card-overlay">
+                    <div class="card-title">ROOTS</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Bintu Pabra</p>
+                </div>
+            </div>
+
+            <!-- Sapphire -->
+            <div class="card"
+                onclick="playMusic('./assets/audio/Ed Sheeran - Sapphire (Official Music Video) [JgDNFQ2RaLQ].mp3', './assets/images/Sapphire by Ed Sheeran poster.jpg', 'Sapphire', 'Ed Sheeran')">
+                <img src="./assets/images/Sapphire by Ed Sheeran poster.jpg" alt="Sapphire">
+                <div class="card-overlay">
+                    <div class="card-title">Sapphire</div>
+                    <p style="font-size: 0.75rem; color: var(--brand-accent);">Ed Sheeran</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Persistent Music Player -->
+    <div class="player-bar" id="playerBar">
+        <div class="player-info">
+            <img id="currentPoster" src="" alt="">
+            <div class="player-text">
+                <div id="currentTitle">Title</div>
+                <div id="currentArtist">Artist</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <div class="player-nav">
+                <button class="control-btn" onclick="playPrevious()" title="Previous">⏮</button>
+                <button class="control-btn play-pause-btn" id="playPauseBtn" onclick="togglePlay()"
+                    title="Play/Pause">▶</button>
+                <button class="control-btn" onclick="playNext()" title="Next">⏭</button>
+                <audio id="audioPlayer">
+                    <source src="" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+        <div class="close-player" onclick="stopMusic()">&times;</div>
+    </div>
+
+    <footer class="main-footer">
+        <div style="margin-bottom: 20px;">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo" height="30">
+        </div>
+        <p class="footer-text">&copy; 2025 IndiGo Inflight Service | All rights reserved</p>
+    </footer>
+
+    <script>
+        let currentPlaylist = [];
+        let currentIndex = -1;
+
+        function setupPlaylist() {
+            const songCards = document.querySelectorAll('.content-grid .card');
+            currentPlaylist = Array.from(songCards).map(card => {
+                const onclickStr = card.getAttribute('onclick');
+                const matches = onclickStr.match(/'(.*?)'/g).map(s => s.replace(/'/g, ""));
+                return {
+                    src: matches[0],
+                    poster: matches[1],
+                    title: matches[2],
+                    artist: matches[3],
+                    element: card
+                };
+            });
+        }
+
+        function playMusic(src, poster, title, artist) {
+            if (currentPlaylist.length === 0) setupPlaylist();
+
+            currentIndex = currentPlaylist.findIndex(s => s.src === src);
+            updatePlayer(src, poster, title, artist);
+        }
+
+        function updatePlayer(src, poster, title, artist) {
+            const bar = document.getElementById('playerBar');
+            const audio = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+
+            document.getElementById('currentPoster').src = poster;
+            document.getElementById('currentTitle').innerText = title;
+            document.getElementById('currentArtist').innerText = artist;
+
+            audio.src = src;
+            bar.style.display = 'flex';
+            audio.play();
+            playPauseBtn.innerText = '⏸';
+
+            // Highlight active card
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+            if (currentIndex !== -1) {
+                currentPlaylist[currentIndex].element.classList.add('playing');
+            }
+
+            audio.onended = () => playNext();
+            audio.onplay = () => playPauseBtn.innerText = '⏸';
+            audio.onpause = () => playPauseBtn.innerText = '▶';
+        }
+
+        function togglePlay() {
+            const audio = document.getElementById('audioPlayer');
+            if (audio.paused) audio.play();
+            else audio.pause();
+        }
+
+        function playNext() {
+            if (currentIndex < currentPlaylist.length - 1) {
+                currentIndex++;
+                const nextSong = currentPlaylist[currentIndex];
+                updatePlayer(nextSong.src, nextSong.poster, nextSong.title, nextSong.artist);
+            }
+        }
+
+        function playPrevious() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                const prevSong = currentPlaylist[currentIndex];
+                updatePlayer(prevSong.src, prevSong.poster, prevSong.title, prevSong.artist);
+            }
+        }
+
+        function stopMusic() {
+            const bar = document.getElementById('playerBar');
+            const audio = document.getElementById('audioPlayer');
+            audio.pause();
+            bar.style.display = 'none';
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+        }
+    </script>
+</body>
+
+</html>

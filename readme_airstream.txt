@@ -1,0 +1,76 @@
+AirStream – Offline In-Flight Entertainment System
+
+AirStream is an offline-first In-Flight Entertainment (IFE) system that allows passengers to access entertainment content through onboard Wi-Fi without requiring internet connectivity. The system delivers a web-based entertainment portal accessible from personal devices such as smartphones, tablets, and laptops.
+
+This project focuses on understanding how inflight entertainment systems work in constrained, offline environments and explores a low-cost, scalable alternative to traditional seat-back IFE systems.
+
+Project Overview
+
+AirStream operates by hosting a local web application and media services on an onboard server. Passengers connect to the aircraft’s Wi-Fi network and access the entertainment portal through a browser, similar to a captive-portal flow used by airlines.
+
+The current implementation is tested using a laptop as the onboard server to simulate real inflight conditions. Future versions will migrate to a Raspberry Pi–based setup to evolve the project into a deployable MVP and scalable product.
+
+Key Features
+
+Offline-first inflight entertainment system
+
+Web-based interface accessible on any modern device
+
+No internet dependency
+
+No application installation required
+
+Lightweight and low-cost architecture
+
+Designed with scalability in mind
+
+Technical Stack
+
+HTML, CSS, JavaScript (frontend)
+
+Local HTTP server for content delivery
+
+Wi-Fi–based local network access
+
+Laptop-based server for testing
+
+Planned Raspberry Pi deployment for MVP
+
+Usage Flow
+
+Passenger connects to the onboard Wi-Fi network
+
+Browser opens the local entertainment portal
+
+Content is streamed directly from the onboard server
+
+No internet access is required at any stage
+
+Repository Note (Important)
+
+This GitHub repository does not include any movies, videos, or copyrighted media files.
+All media content has been intentionally excluded to:
+
+Protect user privacy
+
+Avoid copyright violations
+
+Keep the repository lightweight
+
+Only the application structure and logic are provided.
+
+Future Improvements
+
+Raspberry Pi–based onboard deployment
+
+Captive portal automation
+
+Improved media streaming performance
+
+Passenger session management
+
+Admin dashboard for content control
+
+Disclaimer
+
+This project is a personal educational prototype and is not affiliated with any airline. It is intended solely for learning, experimentation, and demonstration purposes.

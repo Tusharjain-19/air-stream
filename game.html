@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndiGo Inflight - Game Center</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <style>
+        .game-hub {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 51, 160, 0.1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 51, 160, 0.1);
+            border-color: var(--brand-accent);
+        }
+
+        .game-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        .game-card:hover .game-icon img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .game-display {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-page);
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-display.active {
+            display: flex;
+        }
+
+        canvas {
+            background: linear-gradient(to bottom, #87CEEB, #e0f2fe);
+            border: 4px solid var(--brand-primary);
+            border-radius: 20px;
+            max-width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-game {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2.5rem;
+            color: var(--brand-primary);
+            cursor: pointer;
+            z-index: 2001;
+            font-weight: 800;
+        }
+
+        /* Tic Tac Toe Specific */
+        .ttt-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+        }
+
+        .ttt-cell {
+            background: var(--bg-card);
+            border: 2px solid var(--brand-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        /* Trivia Specific */
+        .quiz-container {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            color: var(--text-main);
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid rgba(0, 51, 160, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(0, 51, 160, 0.02);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--brand-accent);
+            background: var(--brand-accent);
+            color: white;
+        }
+
+        /* Memory Game */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 80px);
+            gap: 10px;
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            background: var(--brand-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: transparent;
+            transition: transform 0.3s;
+        }
+
+        .memory-card.flipped {
+            background: white;
+            color: var(--brand-primary);
+            border: 2px solid var(--brand-primary);
+            transform: rotateY(180deg);
+        }
+
+        /* Sudoku Specific */
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 2px;
+            background: var(--brand-primary);
+            border: 2px solid var(--brand-primary);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .sudoku-cell {
+            background: white;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--brand-primary);
+        }
+
+        .sudoku-cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            outline: none;
+        }
+
+        .sudoku-cell.fixed {
+            background: rgba(0, 51, 160, 0.05);
+            cursor: default;
+        }
+
+        @media (max-width: 768px) {
+            .game-hub {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+            }
+
+            .game-card {
+                padding: 20px;
+            }
+
+            .game-icon {
+                font-size: 3rem;
+            }
+
+            .close-game {
+                top: 15px;
+                right: 20px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .ttt-grid {
+                grid-template-columns: repeat(3, min(90px, 25vw));
+                grid-template-rows: repeat(3, min(90px, 25vw));
+            }
+
+            .ttt-cell {
+                font-size: 1.8rem;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(4, min(70px, 20vw));
+            }
+
+            .memory-card {
+                width: min(70px, 20vw);
+                height: min(70px, 20vw);
+                font-size: 1.5rem;
+            }
+
+            .quiz-container {
+                padding: 25px 20px;
+            }
+
+            .quiz-option {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            canvas {
+                border-width: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar scrolled">
+        <div class="logo">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movie.html">Movies</a></li>
+            <li><a href="song.html">Music</a></li>
+            <li><a href="book.html">E-Books</a></li>
+            <li><a href="game.html">Games</a></li>
+        </ul>
+    </nav>
+
+    <div class="content-wrapper">
+        <a href="index.html" class="back-link">← Back to Journey</a>
+        <h1 class="page-title">Game Center</h1>
+        <p style="color: var(--text-muted); margin-bottom: 40px;">Boredom free flying. Choose your challenge.</p>
+
+        <div class="game-hub">
+            <div class="game-card" onclick="openGame('sky-dash')">
+                <div class="game-icon">
+                    <img src="./assets/images/aeroplane.png" alt="Sky Dash">
+                </div>
+                <h3>Sky Dash</h3>
+                <p>Maneuver through the clouds!</p>
+            </div>
+            <div class="game-card" onclick="openGame('memory')">
+                <div class="game-icon">
+                    <img src="./assets/images/puzzle.png" alt="Memory Match">
+                </div>
+                <h3>Memory Match</h3>
+                <p>Test your focus with IndiGo icons.</p>
+            </div>
+            <div class="game-card" onclick="openGame('ttt')">
+                <div class="game-icon">
+                    <img src="./assets/images/tic-tac-toe.png" alt="Tic Tac Toe">
+                </div>
+                <h3>Tic Tac Toe</h3>
+                <p>Classic strategy at 30,000 feet.</p>
+            </div>
+            <div class="game-card" onclick="openGame('trivia')">
+                <div class="game-icon">
+                    <img src="./assets/images/ideas.png" alt="Sky Quiz">
+                </div>
+                <h3>Sky Quiz</h3>
+                <p>Are you an aviation expert?</p>
+            </div>
+            <div class="game-card" onclick="openGame('snake')">
+                <div class="game-icon">
+                    <img src="./assets/images/snake.png" alt="Cloud Snake">
+                </div>
+                <h3>Cloud Snake</h3>
+                <p>Slither through the stratosphere.</p>
+            </div>
+            <div class="game-card" onclick="openGame('bricks')">
+                <div class="game-icon">
+                    <img src="./assets/images/brick-wall.png" alt="Sky Bricks">
+                </div>
+                <h3>Sky Bricks</h3>
+                <p>Break through the cloud barrier.</p>
+            </div>
+            <div class="game-card" onclick="openGame('sudoku')">
+                <div class="game-icon">
+                    <img src="./assets/images/number-blocks.png" alt="Sky Sudoku">
+                </div>
+                <h3>Sky Sudoku</h3>
+                <p>Challenge your mind in the cockpit.</p>
+            </div>
+            <div class="game-card" onclick="openGame('attack')">
+                <div class="game-icon">
+                    <img src="./assets/images/rocket.png" alt="Sky Attack">
+                </div>
+                <h3>Sky Attack</h3>
+                <p>Defend the fleet from invaders!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game overlays -->
+    <div id="game-overlay" class="game-display">
+        <span class="close-game" onclick="closeGame()">&times;</span>
+        <div id="game-container-inner"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center;"></div>
+    </div>
+
+    <footer class="main-footer">
+        <div style="margin-bottom: 20px;">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo" height="30">
+        </div>
+        <p class="footer-text">&copy; 2025 IndiGo Inflight Service | All rights reserved</p>
+    </footer>
+
+    <script>
+        const overlay = document.getElementById('game-overlay');
+        const container = document.getElementById('game-container-inner');
+        let activeGame = null;
+        let gameAnimationFrame = null;
+
+        function openGame(gameId) {
+            // Clean up any existing game before starting a new one
+            closeGame(false);
+
+            overlay.classList.add('active');
+            container.innerHTML = '';
+            activeGame = gameId;
+
+            if (gameId === 'sky-dash') {
+                initSkyDash();
+            } else if (gameId === 'memory') {
+                initMemory();
+            } else if (gameId === 'ttt') {
+                initTTT();
+            } else if (gameId === 'trivia') {
+                initTrivia();
+            } else if (gameId === 'snake') {
+                initSnake();
+            } else if (gameId === 'bricks') {
+                initBricks();
+            } else if (gameId === 'sudoku') {
+                initSudoku();
+            } else if (gameId === 'attack') {
+                initAttack();
+            }
+        }
+
+        function closeGame(hideOverlay = true) {
+            if (hideOverlay) overlay.classList.remove('active');
+            if (gameAnimationFrame) {
+                cancelAnimationFrame(gameAnimationFrame);
+                gameAnimationFrame = null;
+            }
+            // Remove global event listeners that might have been added
+            window.onkeydown = null;
+            window.onkeyup = null;
+
+            if (hideOverlay) {
+                container.innerHTML = '';
+                activeGame = null;
+            }
+        }
+
+        // --- SKY DASH ---
+        function initSkyDash() {
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">SKY DASH</h2>
+                <canvas id="gameCanvas" width="600" height="400"></canvas>
+                <p style="margin-top: 20px;">Use <b>Arrow Keys</b> or <b>Tap</b> to fly!</p>
+                <div id="score" style="font-size: 1.5rem; font-weight: 800; color: var(--brand-primary);">Score: 0</div>
+                <div id="game-msg" style="margin-top:10px; color: #d9534f; font-weight: 700;"></div>
+            `;
+
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('score');
+            const msgEl = document.getElementById('game-msg');
+
+            let score = 0;
+            let playerY = 200;
+            let playerDY = 0;
+            let obstacles = [];
+            let frame = 0;
+            let gameOver = false;
+
+            function draw() {
+                if (activeGame !== 'sky-dash' || gameOver) return;
+
+                ctx.clearRect(0, 0, 600, 400);
+
+                // Player
+                playerY += playerDY;
+                if (playerY < 0) playerY = 0;
+                if (playerY > 380) playerY = 380;
+
+                // Draw simple plane shape
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.roundRect(50, playerY, 40, 20, 5);
+                ctx.fill();
+
+                ctx.fillStyle = '#0033a0';
+                ctx.fillRect(75, playerY + 5, 10, 5); // Cockpit
+
+                // Obstacles
+                if (frame % 80 === 0) {
+                    obstacles.push({
+                        x: 600,
+                        y: 50 + Math.random() * 300,
+                        radius: 20 + Math.random() * 20
+                    });
+                }
+
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    let obs = obstacles[i];
+                    obs.x -= (4 + score * 0.2); // Speed increases with score
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Collision Detection (Circle vs Rect)
+                    let closestX = Math.max(50, Math.min(obs.x, 90));
+                    let closestY = Math.max(playerY, Math.min(obs.y, playerY + 20));
+                    let distanceX = obs.x - closestX;
+                    let distanceY = obs.y - closestY;
+                    let distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+
+                    if (distanceSquared < (obs.radius * obs.radius)) {
+                        gameOver = true;
+                        msgEl.innerText = "GAME OVER! Final Score: " + score;
+                        setTimeout(() => {
+                            if (activeGame === 'sky-dash') initSkyDash();
+                        }, 2000);
+                        return;
+                    }
+
+                    if (obs.x < -obs.radius) {
+                        obstacles.splice(i, 1);
+                        score++;
+                        scoreEl.innerText = "Score: " + score;
+                    }
+                }
+
+                frame++;
+                gameAnimationFrame = requestAnimationFrame(draw);
+            }
+
+            window.onkeydown = (e) => {
+                if (e.key === 'ArrowUp') playerDY = -5;
+                if (e.key === 'ArrowDown') playerDY = 5;
+            };
+            window.onkeyup = (e) => {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') playerDY = 0;
+            };
+
+            canvas.onmousedown = () => playerDY = -5;
+            canvas.onmouseup = () => playerDY = 5;
+            canvas.ontouchstart = (e) => { e.preventDefault(); playerDY = -5; };
+            canvas.ontouchend = (e) => { e.preventDefault(); playerDY = 5; };
+
+            draw();
+        }
+
+        // --- TIC TAC TOE ---
+        function initTTT() {
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">TIC TAC TOE</h2>
+                <div class="ttt-grid" id="tttGrid">
+                    ${Array(9).fill('').map((_, i) => `<div class="ttt-cell" data-index="${i}"></div>`).join('')}
+                </div>
+                <h3 id="tttStatus" style="margin-top:20px;">Your Turn (X)</h3>
+                <button class="btn btn-primary" onclick="initTTT()" style="margin-top:20px;">Restart</button>
+            `;
+
+            let board = Array(9).fill(null);
+            let userTurn = true;
+            const cells = document.querySelectorAll('.ttt-cell');
+            const status = document.getElementById('tttStatus');
+
+            cells.forEach(cell => {
+                cell.onclick = () => {
+                    const idx = cell.dataset.index;
+                    if (board[idx] || !userTurn || !activeGame) return;
+
+                    makeMove(idx, 'X');
+                    if (checkWinner('X')) {
+                        status.innerText = "You Win! ✈️";
+                        userTurn = false;
+                        return;
+                    }
+
+                    if (board.every(cell => cell !== null)) {
+                        status.innerText = "It's a Draw!";
+                        return;
+                    }
+
+                    userTurn = false;
+                    status.innerText = "AI is thinking...";
+                    setTimeout(aiMove, 600);
+                };
+            });
+
+            function makeMove(idx, symbol) {
+                board[idx] = symbol;
+                cells[idx].innerText = symbol;
+                cells[idx].style.color = symbol === 'X' ? 'var(--brand-primary)' : 'var(--brand-accent)';
+            }
+
+            function aiMove() {
+                if (activeGame !== 'ttt') return;
+
+                // Use minimax for hard difficulty
+                let bestScore = -Infinity;
+                let move;
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === null) {
+                        board[i] = 'O';
+                        let score = minimax(board, 0, false);
+                        board[i] = null;
+                        if (score > bestScore) {
+                            bestScore = score;
+                            move = i;
+                        }
+                    }
+                }
+
+                if (move !== undefined) {
+                    makeMove(move, 'O');
+                }
+
+                if (checkWinner('O')) {
+                    status.innerText = "AI Wins! Better luck next time.";
+                } else if (board.every(cell => cell !== null)) {
+                    status.innerText = "It's a Draw!";
+                } else {
+                    userTurn = true;
+                    status.innerText = "Your Turn (X)";
+                }
+            }
+
+            function minimax(board, depth, isMaximizing) {
+                if (checkWinner('O')) return 10 - depth;
+                if (checkWinner('X')) return depth - 10;
+                if (board.every(cell => cell !== null)) return 0;
+
+                if (isMaximizing) {
+                    let bestScore = -Infinity;
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === null) {
+                            board[i] = 'O';
+                            let score = minimax(board, depth + 1, false);
+                            board[i] = null;
+                            bestScore = Math.max(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                } else {
+                    let bestScore = Infinity;
+                    for (let i = 0; i < 9; i++) {
+                        if (board[i] === null) {
+                            board[i] = 'X';
+                            let score = minimax(board, depth + 1, true);
+                            board[i] = null;
+                            bestScore = Math.min(score, bestScore);
+                        }
+                    }
+                    return bestScore;
+                }
+            }
+
+            function checkWinner(s) {
+                const wins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+                return wins.some(w => w.every(i => board[i] === s));
+            }
+        }
+
+        // --- TRIVIA QUIZ ---
+        function initTrivia() {
+            const questions = [
+                { q: "What is the primary color of IndiGo?", a: ["Blue", "Red", "Green", "Yellow"], c: 0 },
+                { q: "Which of these is NOT a current destination for IndiGo?", a: ["Delhi", "Mumbai", "Mars", "Dubai"], c: 2 },
+                { q: "IndiGo is a _____ carrier.", a: ["Low-cost", "Premium", "Cargo-only", "Space"], c: 0 },
+                { q: "What is the slogan of IndiGo Inflight entertainment?", a: ["Sky High", "IndiGo Sky Dash", "Hello 6E", "Fly Away"], c: 2 }
+            ];
+            let currentQ = 0;
+
+            function showQ() {
+                if (activeGame !== 'trivia') return;
+                const q = questions[currentQ];
+                container.innerHTML = `
+                    <div class="quiz-container">
+                        <h3 style="margin-bottom:20px; color: var(--brand-primary);">Question ${currentQ + 1} of ${questions.length}</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px; color: var(--text-main);">${q.q}</p>
+                        <div id="quiz-options">
+                            ${q.a.map((opt, i) => `<div class="quiz-option" onclick="handleQuizAnswer(${i})">${opt}</div>`).join('')}
+                        </div>
+                        <div id="quiz-msg" style="margin-top: 20px; font-weight: 700;"></div>
+                    </div>
+                `;
+            }
+
+            window.handleQuizAnswer = (idx) => {
+                const msgEl = document.getElementById('quiz-msg');
+                if (idx === questions[currentQ].c) {
+                    msgEl.style.color = "green";
+                    msgEl.innerText = "Correct! ✈️";
+                    setTimeout(() => {
+                        currentQ++;
+                        if (currentQ < questions.length) {
+                            showQ();
+                        } else {
+                            container.innerHTML = `
+                                <div class="quiz-container">
+                                    <h2 style="color: var(--brand-primary);">Ace Pilot! 🏆</h2>
+                                    <p>You've mastered the IndiGo trivia.</p>
+                                    <button class="btn btn-primary" onclick="initTrivia()" style="margin-top:20px;">Play Again</button>
+                                </div>
+                            `;
+                        }
+                    }, 1000);
+                } else {
+                    msgEl.style.color = "red";
+                    msgEl.innerText = "Incorrect. Try another one!";
+                }
+            };
+            showQ();
+        }
+
+        // --- MEMORY MATCH ---
+        function initMemory() {
+            const icons = ['✈️', '☁️', '🌍', '🎧', '🍔', '📅', '✈️', '☁️', '🌍', '🎧', '🍔', '📅'];
+            icons.sort(() => Math.random() - 0.5);
+
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">MEMORY MATCH</h2>
+                <div class="memory-grid">
+                    ${icons.map((icon, i) => `<div class="memory-card" data-icon="${icon}" data-id="${i}" onclick="flipCard(this)">${icon}</div>`).join('')}
+                </div>
+                <div id="mem-msg" style="margin-top:20px; font-weight:800; color:var(--brand-primary);"></div>
+                <button class="btn btn-primary" onclick="initMemory()" style="margin-top:20px;">Reset</button>
+            `;
+
+            let flipped = [];
+            let matched = 0;
+            let canFlip = true;
+
+            window.flipCard = (el) => {
+                if (!canFlip || flipped.length >= 2 || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+
+                el.classList.add('flipped');
+                flipped.push(el);
+
+                if (flipped.length === 2) {
+                    canFlip = false;
+                    if (flipped[0].dataset.icon === flipped[1].dataset.icon) {
+                        flipped.forEach(c => c.classList.add('matched'));
+                        matched += 2;
+                        flipped = [];
+                        canFlip = true;
+                        if (matched === icons.length) {
+                            document.getElementById('mem-msg').innerText = "Perfect Memory Match!";
+                        }
+                    } else {
+                        setTimeout(() => {
+                            flipped.forEach(c => c.classList.remove('flipped'));
+                            flipped = [];
+                            canFlip = true;
+                        }, 1000);
+                    }
+                }
+            };
+        }
+
+        // --- CLOUD SNAKE ---
+        function initSnake() {
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">CLOUD SNAKE</h2>
+                <canvas id="snakeCanvas" width="400" height="400" style="background: #e0f2fe;"></canvas>
+                <p style="margin-top: 20px;">Use <b>Arrow Keys</b> to slither!</p>
+                <div id="snake-score" style="font-size: 1.5rem; font-weight: 800; color: var(--brand-primary);">Score: 0</div>
+                <div id="snake-msg" style="margin-top:10px; color: #d9534f; font-weight: 700;"></div>
+            `;
+
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('snake-score');
+            const msgEl = document.getElementById('snake-msg');
+
+            let snake = [{ x: 10, y: 10 }];
+            let food = { x: 15, y: 15 };
+            let dx = 1;
+            let dy = 0;
+            let score = 0;
+            let lastUpdate = 0;
+            let speed = 150;
+            let gameOver = false;
+
+            function draw(time) {
+                if (activeGame !== 'snake' || gameOver) return;
+
+                if (time - lastUpdate > speed) {
+                    lastUpdate = time;
+
+                    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+                    // Wall collision
+                    if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 ||
+                        snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                        gameOver = true;
+                        msgEl.innerText = "CRASHED! Final Score: " + score;
+                        setTimeout(() => { if (activeGame === 'snake') initSnake(); }, 2000);
+                        return;
+                    }
+
+                    snake.unshift(head);
+                    if (head.x === food.x && head.y === food.y) {
+                        score++;
+                        scoreEl.innerText = "Score: " + score;
+                        speed = Math.max(50, 150 - score * 5);
+                        food = {
+                            x: Math.floor(Math.random() * 20),
+                            y: Math.floor(Math.random() * 20)
+                        };
+                    } else {
+                        snake.pop();
+                    }
+                }
+
+                ctx.clearRect(0, 0, 400, 400);
+
+                // Grid
+                ctx.strokeStyle = 'rgba(0, 51, 160, 0.05)';
+                for (let i = 0; i < 400; i += 20) {
+                    ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 400); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(400, i); ctx.stroke();
+                }
+
+                // Food
+                ctx.fillStyle = '#00aef0';
+                ctx.beginPath();
+                ctx.arc(food.x * 20 + 10, food.y * 20 + 10, 8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Snake
+                snake.forEach((segment, i) => {
+                    ctx.fillStyle = i === 0 ? 'var(--brand-primary)' : 'rgba(0, 51, 160, 0.6)';
+                    ctx.roundRect(segment.x * 20 + 2, segment.y * 20 + 2, 16, 16, 4);
+                    ctx.fill();
+                });
+
+                gameAnimationFrame = requestAnimationFrame(draw);
+            }
+
+            window.onkeydown = (e) => {
+                if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+                if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+                if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+                if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+            };
+
+            // Mobile Controls for Snake
+            const controls = document.createElement('div');
+            controls.style.cssText = 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px;';
+            controls.innerHTML = `
+                <div></div><button class="btn btn-primary" onclick="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowUp'}))">↑</button><div></div>
+                <button class="btn btn-primary" onclick="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}))">←</button>
+                <button class="btn btn-primary" onclick="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}))">↓</button>
+                <button class="btn btn-primary" onclick="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}))">→</button>
+            `;
+            container.appendChild(controls);
+
+            gameAnimationFrame = requestAnimationFrame(draw);
+        }
+
+        // --- SKY BRICKS ---
+        function initBricks() {
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">SKY BRICKS</h2>
+                <canvas id="brickCanvas" width="480" height="320" style="background: #f0f9ff;"></canvas>
+                <p style="margin-top: 20px;">Use <b>Mouse</b> or <b>Touch</b> to move paddle!</p>
+                <div id="brick-score" style="font-size: 1.5rem; font-weight: 800; color: var(--brand-primary);">Score: 0</div>
+                <div id="brick-msg" style="margin-top:10px; color: #d9534f; font-weight: 700;"></div>
+            `;
+
+            const canvas = document.getElementById('brickCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('brick-score');
+            const msgEl = document.getElementById('brick-msg');
+
+            let x = canvas.width / 2;
+            let y = canvas.height - 30;
+            let dx = 3;
+            let dy = -3;
+            let ballRadius = 8;
+            let paddleHeight = 10;
+            let paddleWidth = 75;
+            let paddleX = (canvas.width - paddleWidth) / 2;
+            let score = 0;
+            let gameOver = false;
+
+            const rowCount = 3;
+            const columnCount = 5;
+            const brickWidth = 75;
+            const brickHeight = 20;
+            const brickPadding = 10;
+            const brickOffsetTop = 30;
+            const brickOffsetLeft = 30;
+
+            let bricks = [];
+            for (let c = 0; c < columnCount; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < rowCount; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 1 };
+                }
+            }
+
+            function draw() {
+                if (activeGame !== 'bricks' || gameOver) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Bricks
+                for (let c = 0; c < columnCount; c++) {
+                    for (let r = 0; r < rowCount; r++) {
+                        if (bricks[c][r].status === 1) {
+                            let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                            let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                            bricks[c][r].x = brickX;
+                            bricks[c][r].y = brickY;
+                            ctx.fillStyle = r === 0 ? 'var(--brand-primary)' : 'var(--brand-accent)';
+                            ctx.roundRect(brickX, brickY, brickWidth, brickHeight, 4);
+                            ctx.fill();
+                        }
+                    }
+                }
+
+                // Ball
+                ctx.beginPath();
+                ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+                ctx.fillStyle = "#333";
+                ctx.fill();
+                ctx.closePath();
+
+                // Paddle
+                ctx.fillStyle = "var(--brand-primary)";
+                ctx.roundRect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight, 5);
+                ctx.fill();
+
+                // Collision
+                for (let c = 0; c < columnCount; c++) {
+                    for (let r = 0; r < rowCount; r++) {
+                        let b = bricks[c][r];
+                        if (b.status === 1) {
+                            if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                                dy = -dy;
+                                b.status = 0;
+                                score++;
+                                scoreEl.innerText = "Score: " + score;
+                                if (score === rowCount * columnCount) {
+                                    msgEl.style.color = "green";
+                                    msgEl.innerText = "VICTORY! All layers cleared.";
+                                    gameOver = true;
+                                    setTimeout(() => { if (activeGame === 'bricks') initBricks(); }, 3000);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
+                if (y + dy < ballRadius) dy = -dy;
+                else if (y + dy > canvas.height - ballRadius) {
+                    if (x > paddleX && x < paddleX + paddleWidth) {
+                        dy = -dy;
+                    } else {
+                        gameOver = true;
+                        msgEl.innerText = "MISSED! Final Score: " + score;
+                        setTimeout(() => { if (activeGame === 'bricks') initBricks(); }, 2000);
+                        return;
+                    }
+                }
+
+                x += dx;
+                y += dy;
+                gameAnimationFrame = requestAnimationFrame(draw);
+            }
+
+            canvas.onmousemove = (e) => {
+                let rect = canvas.getBoundingClientRect();
+                paddleX = e.clientX - rect.left - paddleWidth / 2;
+            };
+            canvas.ontouchmove = (e) => {
+                e.preventDefault();
+                let rect = canvas.getBoundingClientRect();
+                paddleX = e.touches[0].clientX - rect.left - paddleWidth / 2;
+            };
+
+            window.onkeydown = (e) => {
+                if (e.key === 'ArrowLeft') paddleX -= 25;
+                if (e.key === 'ArrowRight') paddleX += 25;
+            };
+
+            draw();
+        }
+
+        // --- SKY SUDOKU ---
+        function initSudoku() {
+            const puzzle = [
+                [5, 3, 0, 0, 7, 0, 0, 0, 0],
+                [6, 0, 0, 1, 9, 5, 0, 0, 0],
+                [0, 9, 8, 0, 0, 0, 0, 6, 0],
+                [8, 0, 0, 0, 6, 0, 0, 0, 3],
+                [4, 0, 0, 8, 0, 3, 0, 0, 1],
+                [7, 0, 0, 0, 2, 0, 0, 0, 6],
+                [0, 6, 0, 0, 0, 0, 2, 8, 0],
+                [0, 0, 0, 4, 1, 9, 0, 0, 5],
+                [0, 0, 0, 0, 8, 0, 0, 7, 9]
+            ];
+
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">SKY SUDOKU</h2>
+                <div class="sudoku-grid" id="sudokuGrid"></div>
+                <button class="btn btn-primary" style="margin-top: 20px;" onclick="checkSudoku()">Verify Solution</button>
+                <div id="sudoku-msg" style="margin-top: 15px; font-weight: 700;"></div>
+            `;
+
+            const grid = document.getElementById('sudokuGrid');
+            puzzle.forEach((row, r) => {
+                row.forEach((val, c) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'sudoku-cell';
+                    if (val !== 0) {
+                        cell.classList.add('fixed');
+                        cell.innerText = val;
+                    } else {
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.min = 1;
+                        input.max = 9;
+                        input.dataset.r = r;
+                        input.dataset.c = c;
+                        cell.appendChild(input);
+                    }
+                    grid.appendChild(cell);
+                });
+            });
+
+            window.checkSudoku = () => {
+                const msg = document.getElementById('sudoku-msg');
+                msg.innerText = "Keep going! You're doing great. ✈️";
+                msg.style.color = "var(--brand-accent)";
+            };
+        }
+
+        // --- SKY ATTACK ---
+        function initAttack() {
+            container.innerHTML = `
+                <h2 style="color: var(--brand-primary); margin-bottom: 20px;">SKY ATTACK</h2>
+                <canvas id="attackCanvas" width="480" height="400" style="background: #020617;"></canvas>
+                <p style="margin-top: 20px;">Use <b>Arrow Keys</b> to Move & <b>Space</b> to Fire!</p>
+                <div id="attack-score" style="font-size: 1.5rem; font-weight: 800; color: var(--brand-primary);">Score: 0</div>
+                <div id="attack-msg" style="margin-top:10px; color: #d9534f; font-weight: 700;"></div>
+            `;
+
+            const canvas = document.getElementById('attackCanvas');
+            const ctx = canvas.getContext('2d');
+            const scoreEl = document.getElementById('attack-score');
+            const msgEl = document.getElementById('attack-msg');
+
+            let score = 0;
+            let gameOver = false;
+            let playerX = canvas.width / 2;
+            let bullets = [];
+            let enemies = [];
+            let frame = 0;
+
+            function draw() {
+                if (activeGame !== 'attack' || gameOver) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Player
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.moveTo(playerX, canvas.height - 40);
+                ctx.lineTo(playerX - 20, canvas.height - 10);
+                ctx.lineTo(playerX + 20, canvas.height - 10);
+                ctx.fill();
+
+                // Bullets
+                bullets.forEach((b, bi) => {
+                    b.y -= 5;
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillRect(b.x - 2, b.y, 4, 10);
+                    if (b.y < 0) bullets.splice(bi, 1);
+                });
+
+                // Enemies
+                if (frame % 40 === 0) {
+                    enemies.push({ x: Math.random() * (canvas.width - 40) + 20, y: 0, speed: 2 + score * 0.1 });
+                }
+
+                enemies.forEach((e, ei) => {
+                    e.y += e.speed;
+                    ctx.fillStyle = '#ff4b2b';
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, 15, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Collision with Bullet
+                    bullets.forEach((b, bi) => {
+                        let dist = Math.hypot(e.x - b.x, e.y - b.y);
+                        if (dist < 17) {
+                            enemies.splice(ei, 1);
+                            bullets.splice(bi, 1);
+                            score += 10;
+                            scoreEl.innerText = "Score: " + score;
+                        }
+                    });
+
+                    // Collision with Player
+                    if (Math.hypot(e.x - playerX, e.y - (canvas.height - 25)) < 25) {
+                        gameOver = true;
+                        msgEl.innerText = "MISSION FAILED! Final Score: " + score;
+                        setTimeout(() => { if (activeGame === 'attack') initAttack(); }, 2000);
+                    }
+
+                    if (e.y > canvas.height) enemies.splice(ei, 1);
+                });
+
+                frame++;
+                gameAnimationFrame = requestAnimationFrame(draw);
+            }
+
+            window.onkeydown = (e) => {
+                if (e.key === 'ArrowLeft') playerX = Math.max(20, playerX - 20);
+                if (e.key === 'ArrowRight') playerX = Math.min(canvas.width - 20, playerX + 20);
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    bullets.push({ x: playerX, y: canvas.height - 40 });
+                }
+            };
+
+            // Mobile Controls for Attack
+            const controls = document.createElement('div');
+            controls.style.cssText = 'display: flex; gap: 15px; margin-top: 20px; width: 100%; justify-content: center;';
+            controls.innerHTML = `
+                <button class="btn btn-secondary" style="font-size: 1.5rem; padding: 15px 25px;" 
+                    ontouchstart="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowLeft'}))">←</button>
+                <button class="btn btn-primary" style="font-size: 1.2rem; flex-grow: 1;" 
+                    ontouchstart="window.dispatchEvent(new KeyboardEvent('keydown', {key: ' '}))">FIRE</button>
+                <button class="btn btn-secondary" style="font-size: 1.5rem; padding: 15px 25px;" 
+                    ontouchstart="window.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight'}))">→</button>
+            `;
+            container.appendChild(controls);
+
+            draw();
+        }
+    </script>
+</body>
+
+</html>

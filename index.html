@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndiGo Inflight - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <style>
+        /* Home Specific Player Styles */
+        .video-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-container.active {
+            display: flex;
+        }
+
+        .video-player {
+            width: 90%;
+            max-width: 1100px;
+            aspect-ratio: 16/9;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 51, 160, 0.5);
+            outline: none;
+            background: black;
+        }
+
+        .close-video {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            z-index: 2001;
+            transition: transform 0.3s;
+        }
+
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 12px 4%;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .player-bar {
+            background: rgba(15, 23, 42, 0.85);
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-main);
+            min-width: 200px;
+        }
+
+        .player-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .player-controls {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 400px;
+            height: 32px;
+            filter: grayscale(1) contrast(1.2);
+        }
+
+        body.dark-mode audio {
+            filter: invert(1) grayscale(1) contrast(1.2);
+        }
+
+        .close-player {
+            cursor: pointer;
+            font-size: 1.8rem;
+            margin-left: 20px;
+            color: var(--text-muted);
+        }
+
+        /* Ensure card titles are ALWAYS visible on mobile */
+        @media (max-width: 768px) {
+            .card-overlay {
+                opacity: 1 !important;
+                background: linear-gradient(to top, rgba(0, 51, 160, 0.95), transparent 80%) !important;
+                transform: translateY(0) !important;
+            }
+
+            .card-title {
+                font-size: 0.85rem !important;
+                white-space: normal !important;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movie.html">Movies</a></li>
+            <li><a href="song.html">Music</a></li>
+            <li><a href="book.html">E-Books</a></li>
+            <li><a href="game.html">Games</a></li>
+        </ul>
+    </nav>
+
+    <!-- Netflix Style Hero Section using Company Background -->
+    <header class="hero" style="background-image: url('./assets/images/background.jpg');">
+        <div class="hero-content">
+            <h1 class="hero-title">Fly with Entertainment</h1>
+            <p class="hero-description">From blockbusters to chart toppers, enjoy a premium selection of media curated
+                for your IndiGo journey.
+            </p>
+            <div class="hero-btns">
+                <a href="movie.html" class="btn btn-primary"><span>▶</span> Play Movies</a>
+                <a href="song.html" class="btn btn-secondary">Listen to Songs</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Movies Section -->
+        <section class="content-row">
+            <h2 class="row-title">Inflight Cinema</h2>
+            <div class="row-slider">
+                <div class="card"
+                    onclick="playVideo('./assets/videos/Sitare.Zameen.Par.2025.1080p.V2.HDTC.Hindi-Line.HC-ESub.x264-HDHub4u.Ms.mp4')">
+                    <img src="./assets/images/sitare zameen par.jpg" alt="Sitare Zameen Par">
+                    <div class="card-overlay">
+                        <div class="card-tag">New</div>
+                        <div class="card-title">Sitare Zameen Par</div>
+                    </div>
+                </div>
+                <div class="card" onclick="playVideo('./assets/videos/Rustom.2016.720p.BRRip.x264.Hindi.AAC-ETRG.mp4')">
+                    <img src="./assets/images/rustom.jpg" alt="Rustom">
+                    <div class="card-overlay">
+                        <div class="card-tag">Thriller</div>
+                        <div class="card-title">Rustom</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playVideo('./assets/videos/2.States.2014.720p.BluRay.Hindi.DD.5.1.x264.ESubs.mp4')">
+                    <img src="./assets/images/2 states.webp" alt="2 States">
+                    <div class="card-overlay">
+                        <div class="card-tag">Romance</div>
+                        <div class="card-title">2 States</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playVideo('./assets/videos/WAR-2.2025.HQ.1080p.V2-HDTC.Hindi-Line.x264-HDHub4u.Ms.mkv')">
+                    <img src="./assets/images/war2.jpg" alt="War 2">
+                    <div class="card-overlay">
+                        <div class="card-tag">Action</div>
+                        <div class="card-title">WAR 2</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playVideo('./assets/videos/Sunny.Sanskari.Ki.Tulsi.Kumari.2025.HQ.1080p.V2.HDTC.Hindi-LiNE.x264-HDHub4u.Ms.mkv')">
+                    <img src="./assets/images/Sunny Sanskari.jpg" alt="Sunny Sanskari">
+                    <div class="card-overlay">
+                        <div class="card-tag">Comedy</div>
+                        <div class="card-title">Sunny Sanskari</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Songs Section -->
+        <section class="content-row">
+            <h2 class="row-title">Music Lounge</h2>
+            <div class="row-slider">
+                <div class="card"
+                    onclick="playMusic('./assets/audio/Alex Warren - Ordinary (Lyrics).mp3', './assets/images/ordinary alex warren poster.jpg', 'Ordinary', 'Alex Warren')">
+                    <img src="./assets/images/ordinary alex warren poster.jpg" alt="Ordinary">
+                    <div class="card-overlay">
+                        <div class="card-title">Ordinary</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/Channa Ve - Full Video  Bhoot - Part One_ The Haunted Ship  Vicky K & Bhumi P  Akhil & Mansheel.mp3', './assets/images/channa_ve.png', 'Channa Ve', 'Akhil')">
+                    <img src="./assets/images/channa_ve.png" alt="Channa Ve">
+                    <div class="card-overlay">
+                        <div class="card-title">Channa Ve</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/Ed Sheeran & Diljit Dosanjh - Shape of You (Live in Birmingham 2024).mp3', './assets/images/Shape of You x Naina poster.jpg', 'Shape of You', 'Ed Sheeran x Diljit')">
+                    <img src="./assets/images/Shape of You x Naina poster.jpg" alt="Song">
+                    <div class="card-overlay">
+                        <div class="card-title">Shape of You</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/GURU RANDHAWA - AZUL  MV.mp3', './assets/images/azUL by Guru Randhawa poster.jpg', 'AZUL', 'Guru Randhawa')">
+                    <img src="./assets/images/azUL by Guru Randhawa poster.jpg" alt="Song">
+                    <div class="card-overlay">
+                        <div class="card-title">AZUL</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/SOFTLY (Official Music Video) KARAN AUJLA  IKKY  LATEST PUNJABI SONGS 2023.mp3', './assets/images/soFTLY by KARAN AUJLAposter.jpg', 'SOFTLY', 'Karan Aujla')">
+                    <img src="./assets/images/soFTLY by KARAN AUJLAposter.jpg" alt="Softly">
+                    <div class="card-overlay">
+                        <div class="card-title">SOFTLY</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/O Rangrez - Lyrcial Video  Bhaag Milkha Bhaag  Farhan, Sonam  Shreya Ghoshal, Javed Bashir.mp3', './assets/images/O Rangrez poster.jpg', 'O Rangrez', 'Shreya Ghoshal')">
+                    <img src="./assets/images/O Rangrez poster.jpg" alt="O Rangrez">
+                    <div class="card-overlay">
+                        <div class="card-title">O Rangrez</div>
+                    </div>
+                </div>
+                <div class="card"
+                    onclick="playMusic('./assets/audio/ROOTS - Bintu Pabra & KP Kundu  Teji Sandhu  Bamboo Beat  Pellet Drum Productions.mp3', './assets/images/ROOTSposter.jpg', 'ROOTS', 'Bintu Pabra')">
+                    <img src="./assets/images/ROOTSposter.jpg" alt="ROOTS">
+                    <div class="card-overlay">
+                        <div class="card-title">ROOTS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section class="content-row">
+            <h2 class="row-title">Game Center</h2>
+            <div class="row-slider" id="homeGameSlider">
+                <a href="game.html" class="game-card-home">
+                    <div class="game-icon-home" style="background: rgba(0, 51, 160, 0.05);">
+                        <img src="./assets/images/aeroplane.png" alt="Sky Dash">
+                    </div>
+                    <div class="game-info-home">
+                        <div class="game-name-home">Sky Dash</div>
+                        <div class="game-tag-home">Action</div>
+                    </div>
+                </a>
+                <a href="game.html" class="game-card-home">
+                    <div class="game-icon-home" style="background: rgba(0, 174, 240, 0.05);">
+                        <img src="./assets/images/puzzle.png" alt="Memory Match">
+                    </div>
+                    <div class="game-info-home">
+                        <div class="game-name-home">Memory Match</div>
+                        <div class="game-tag-home">Puzzle</div>
+                    </div>
+                </a>
+                <a href="game.html" class="game-card-home">
+                    <div class="game-icon-home" style="background: rgba(0, 51, 160, 0.05);">
+                        <img src="./assets/images/tic-tac-toe.png" alt="Tic Tac Toe">
+                    </div>
+                    <div class="game-info-home">
+                        <div class="game-name-home">Tic Tac Toe</div>
+                        <div class="game-tag-home">Board</div>
+                    </div>
+                </a>
+                <a href="game.html" class="game-card-home">
+                    <div class="game-icon-home" style="background: rgba(0, 174, 240, 0.05);">
+                        <img src="./assets/images/snake.png" alt="Cloud Snake">
+                    </div>
+                    <div class="game-info-home">
+                        <div class="game-name-home">Cloud Snake</div>
+                        <div class="game-tag-home">Arcade</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- E-Books Section -->
+        <section class="content-row" style="padding-bottom: 100px;">
+            <h2 class="row-title">Reading Lounge</h2>
+            <div class="row-slider">
+                <a href="./assets/pdfs/Atomic habits ( PDFDrive ).pdf" target="_blank" class="card">
+                    <img src="./assets/images/atomic habits book poster.webp" alt="Atomic Habits">
+                    <div class="card-overlay">
+                        <div class="card-tag">Growth</div>
+                        <div class="card-title">Atomic Habits</div>
+                    </div>
+                </a>
+                <a href="./assets/pdfs/the-psychology-of-money-by-morgan-housel.pdf" target="_blank" class="card">
+                    <img src="./assets/images/The Psychology of money book poster.jpg" alt="Book">
+                    <div class="card-overlay">
+                        <div class="card-tag">Finance</div>
+                        <div class="card-title">Psychology of Money</div>
+                    </div>
+                </a>
+                <a href="./assets/pdfs/Destination_india.pdf" target="_blank" class="card">
+                    <img src="./assets/images/destination of india poster.png" alt="Travel">
+                    <div class="card-overlay">
+                        <div class="card-tag">Travel</div>
+                        <div class="card-title">Destination India</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal -->
+    <div class="video-container" id="videoContainer">
+        <span class="close-video" onclick="closeVideo()">&times;</span>
+        <video id="player" class="video-player" controls preload="auto">
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Persistent Music Player -->
+    <div class="player-bar" id="playerBar">
+        <div class="player-info">
+            <img id="currentPoster" src="" alt="">
+            <div class="player-text">
+                <div id="currentTitle">Title</div>
+                <div id="currentArtist">Artist</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <div class="player-nav">
+                <button class="control-btn" onclick="playPrevious()" title="Previous">⏮</button>
+                <button class="control-btn play-pause-btn" id="playPauseBtn" onclick="togglePlay()"
+                    title="Play/Pause">▶</button>
+                <button class="control-btn" onclick="playNext()" title="Next">⏭</button>
+                <audio id="audioPlayer">
+                    <source src="" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+        <div class="close-player" onclick="stopMusic()">&times;</div>
+    </div>
+
+    <footer class="main-footer">
+        <div style="margin-bottom: 20px;">
+            <img src="./assets/images/IndiGo_logo_2x.avif" alt="IndiGo" height="30">
+        </div>
+        <p class="footer-text">&copy; 2025 IndiGo Inflight Service | All rights reserved</p>
+    </footer>
+
+    <script>
+        let currentPlaylist = [];
+        let currentIndex = -1;
+
+        function playVideo(src) {
+            const container = document.getElementById('videoContainer');
+            const player = document.getElementById('player');
+            player.src = src;
+            container.classList.add('active');
+            player.play();
+        }
+
+        function closeVideo() {
+            const container = document.getElementById('videoContainer');
+            const player = document.getElementById('player');
+            player.pause();
+            container.classList.remove('active');
+        }
+
+        function setupPlaylist() {
+            const songCards = document.querySelectorAll('.content-row:nth-of-type(2) .card');
+            currentPlaylist = Array.from(songCards).map(card => {
+                const onclickStr = card.getAttribute('onclick');
+                const matches = onclickStr.match(/'(.*?)'/g).map(s => s.replace(/'/g, ""));
+                return {
+                    src: matches[0],
+                    poster: matches[1],
+                    title: matches[2],
+                    artist: matches[3]
+                };
+            });
+        }
+
+        function playMusic(src, poster, title, artist) {
+            if (currentPlaylist.length === 0) setupPlaylist();
+
+            currentIndex = currentPlaylist.findIndex(s => s.src === src);
+            updatePlayer(src, poster, title, artist);
+        }
+
+        function updatePlayer(src, poster, title, artist) {
+            const bar = document.getElementById('playerBar');
+            const audio = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+
+            document.getElementById('currentPoster').src = poster;
+            document.getElementById('currentTitle').innerText = title;
+            document.getElementById('currentArtist').innerText = artist;
+
+            audio.src = src;
+            bar.style.display = 'flex';
+            audio.play();
+            playPauseBtn.innerText = '⏸';
+
+            audio.onended = () => playNext();
+
+            audio.onplay = () => playPauseBtn.innerText = '⏸';
+            audio.onpause = () => playPauseBtn.innerText = '▶';
+        }
+
+        function togglePlay() {
+            const audio = document.getElementById('audioPlayer');
+            if (audio.paused) audio.play();
+            else audio.pause();
+        }
+
+        function playNext() {
+            if (currentIndex < currentPlaylist.length - 1) {
+                currentIndex++;
+                const nextSong = currentPlaylist[currentIndex];
+                updatePlayer(nextSong.src, nextSong.poster, nextSong.title, nextSong.artist);
+            }
+        }
+
+        function playPrevious() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                const prevSong = currentPlaylist[currentIndex];
+                updatePlayer(prevSong.src, prevSong.poster, prevSong.title, prevSong.artist);
+            }
+        }
+
+        function stopMusic() {
+            document.getElementById('playerBar').style.display = 'none';
+            document.getElementById('audioPlayer').pause();
+        }
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Initialize mobile menu from script.js logic if present or add here
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            if (mobileBtn && navLinks) {
+                mobileBtn.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
