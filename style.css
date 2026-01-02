@@ -249,7 +249,6 @@ body.dark-mode .hero::after {
     border: 1px solid rgba(0, 51, 160, 0.2);
 }
 
-/* Content Rows & Grid */
 .content-row {
     padding: 0 4%;
     margin-bottom: 4rem;
@@ -307,7 +306,6 @@ body.dark-mode .hero::after {
     gap: 30px;
 }
 
-/* Game Cards Home Specific */
 .game-card-home {
     min-width: 180px;
     width: 180px;
@@ -375,7 +373,6 @@ body.dark-mode .hero::after {
     letter-spacing: 0.5px;
 }
 
-/* Cards */
 .card {
     min-width: 200px;
     width: 200px;
@@ -444,7 +441,6 @@ body.dark-mode .hero::after {
     margin-bottom: 8px;
 }
 
-/* Active Playing State */
 .card.playing {
     border: 2px solid var(--brand-accent) !important;
     transform: translateY(-10px) scale(1.02);
@@ -500,8 +496,6 @@ body.dark-mode .hero::after {
     }
 }
 
-/* Floating Pill Music Player */
-/* Base Player Bar (Mini Player) */
 .player-bar {
     position: fixed;
     bottom: 25px;
@@ -573,7 +567,6 @@ body.dark-mode .player-bar:hover {
     }
 }
 
-/* Playing Bars Animation */
 .playing-bars {
     display: flex;
     align-items: flex-end;
@@ -689,7 +682,6 @@ body.dark-mode .play-pause-btn .control-img {
     color: #ef4444;
 }
 
-/* Full Screen Player Modal */
 .music-modal {
     position: fixed;
     top: 50%;
@@ -876,7 +868,6 @@ body.dark-mode .play-pause-btn .control-img {
     margin-top: 5px;
 }
 
-/* Controls */
 .modal-controls {
     display: flex;
     justify-content: center;
@@ -913,7 +904,6 @@ body.dark-mode .play-pause-btn .control-img {
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s, opacity 0.3s;
 }
 
-/* Center Modal Play Button Icon (Clean Monochrome) */
 .modal-play-btn .control-img {
     width: 44px;
     height: 44px;
@@ -925,17 +915,15 @@ body.dark-mode .play-pause-btn .control-img {
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Optical centering for the Triangle Play icon */
+
 .modal-play-btn:not(.is-playing) .control-img {
     margin-left: 6px;
 }
 
-/* Mini Player Play Icon Centering */
 .play-pause-btn:not(.is-playing) .control-img {
     margin-left: 4px;
 }
 
-/* Modal Side Controls (Pure White) */
 .modal-control-btn:not(.modal-play-btn) .control-img,
 .music-modal svg {
     filter: brightness(0) invert(1) !important;
@@ -948,18 +936,17 @@ body.dark-mode .play-pause-btn .control-img {
     transform: scale(1.1);
 }
 
-/* Small Player Controls (Monochrome) */
+
 .control-btn .control-img {
     width: 22px;
     height: 22px;
 }
 
-/* Mini Player Play/Pause Button */
 .play-pause-btn {
     width: 48px;
     height: 48px;
     background: #000 !important;
-    /* Pure Black Circle */
+   
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
@@ -969,23 +956,20 @@ body.dark-mode .play-pause-btn .control-img {
 
 body.dark-mode .play-pause-btn {
     background: #fff !important;
-    /* Pure White in Dark Mode */
+    
 }
 
-/* Icons inside mini-player play button */
 .play-pause-btn .control-img {
     filter: brightness(0) invert(1) !important;
-    /* White icon on black */
     width: 24px !important;
     height: 24px !important;
 }
 
 body.dark-mode .play-pause-btn .control-img {
     filter: brightness(0) !important;
-    /* Black icon on white */
+  
 }
 
-/* Progress bar and other accents should be white/grey */
 .progress-fill {
     background: #fff !important;
 }
@@ -1088,7 +1072,6 @@ body.dark-mode .card.playing {
     transform: translateX(-50%);
 }
 
-/* Footer Update */
 .main-footer {
     padding: 60px 4% 120px;
     background-color: var(--white);
@@ -1096,8 +1079,6 @@ body.dark-mode .card.playing {
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-
-/* Media Queries */
 @media (max-width: 1024px) {
     .content-grid {
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1169,7 +1150,6 @@ body.dark-mode .card.playing {
         padding: 8px 14px;
         transform: translateX(-50%);
         flex-direction: row;
-        /* Keep it horizontal pill always */
         justify-content: space-between;
     }
 
@@ -1197,3 +1177,4 @@ body.dark-mode .card.playing {
         gap: 15px;
     }
 }
+
