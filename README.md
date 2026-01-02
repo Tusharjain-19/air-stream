@@ -1,9 +1,3 @@
-Perfect - below is a **fully human-written, beginner-friendly, detailed README.md**.
-It assumes the reader **does not know coding, servers, IPs, or networking** and explains everything in **easy English**, step by step.
-
-You can **copy–paste this directly** into your GitHub `README.md`.
-
----
 
 # AirStream – Offline In-Flight Entertainment System
 
