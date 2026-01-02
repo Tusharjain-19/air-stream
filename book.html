@@ -30,42 +30,143 @@
 
         <div class="content-grid">
             <!-- Atomic Habits -->
-            <a href="./assets/pdfs/Atomic habits ( PDFDrive ).pdf" target="_blank" class="card">
+            <div class="card" onclick="openBook('./assets/pdfs/Atomic habits ( PDFDrive ).pdf', 'Atomic Habits')">
                 <img src="./assets/images/atomic habits book poster.webp" alt="Atomic Habits">
                 <div class="card-overlay">
                     <div class="card-title">Atomic Habits</div>
                     <p style="font-size: 0.75rem; color: var(--brand-accent);">Personal Growth</p>
                 </div>
-            </a>
+            </div>
 
             <!-- Psychology of Money -->
-            <a href="./assets/pdfs/the-psychology-of-money-by-morgan-housel.pdf" target="_blank" class="card">
+            <div class="card"
+                onclick="openBook('./assets/pdfs/the-psychology-of-money-by-morgan-housel.pdf', 'Psychology of Money')">
                 <img src="./assets/images/The Psychology of money book poster.jpg" alt="Psychology of Money">
                 <div class="card-overlay">
                     <div class="card-title">Psychology of Money</div>
                     <p style="font-size: 0.75rem; color: var(--brand-accent);">Finance | Housel</p>
                 </div>
-            </a>
+            </div>
 
             <!-- Thinking Fast and Slow -->
-            <a href="./assets/pdfs/Daniel Kahneman-Thinking, Fast and Slow  .pdf" target="_blank" class="card">
+            <div class="card"
+                onclick="openBook('./assets/pdfs/Daniel Kahneman-Thinking, Fast and Slow  .pdf', 'Thinking, Fast and Slow')">
                 <img src="./assets/images/Thinking, Fast and Slow book poster.jpg" alt="Thinking Fast and Slow">
                 <div class="card-overlay">
                     <div class="card-title">Thinking, Fast and Slow</div>
                     <p style="font-size: 0.75rem; color: var(--brand-accent);">Psychology | Kahneman</p>
                 </div>
-            </a>
+            </div>
 
             <!-- Destination India -->
-            <a href="./assets/pdfs/Destination_india.pdf" target="_blank" class="card">
+            <div class="card" onclick="openBook('./assets/pdfs/Destination_india.pdf', 'Destination India')">
                 <img src="./assets/images/destination of india poster.png" alt="Destination India">
                 <div class="card-overlay">
                     <div class="card-title">Destination India</div>
                     <p style="font-size: 0.75rem; color: var(--brand-accent);">Travel | IndiGo</p>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
+
+    <!-- Music Player Components for Background Play -->
+    <div class="player-bar" id="playerBar" onclick="openMusicModal()">
+        <div class="player-info">
+            <img id="currentPoster" src="" alt="">
+            <div class="player-text">
+                <div style="display: flex; align-items: center;">
+                    <div id="currentTitle">Select a song</div>
+                    <div class="playing-bars" id="playingBars" style="display: none;">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div id="currentArtist">to play</div>
+            </div>
+        </div>
+        <div class="player-controls" onclick="event.stopPropagation()">
+            <button class="control-btn" onclick="playPrevious()" title="Previous">
+                <img src="./assets/images/backward.png" alt="Prev" class="control-img">
+            </button>
+            <button class="control-btn play-pause-btn" id="playPauseBtn" onclick="togglePlay()" title="Play/Pause">
+                <img src="./assets/images/play.png" alt="Play" class="control-img">
+            </button>
+            <button class="control-btn" onclick="playNext()" title="Next">
+                <img src="./assets/images/forwad.png" alt="Next" class="control-img">
+            </button>
+        </div>
+        <div class="close-player" onclick="event.stopPropagation(); stopMusic()">
+            <img src="./assets/images/cross.png" alt="Close" style="width: 20px; filter: grayscale(1);">
+        </div>
+    </div>
+
+    <!-- Full Screen Music Modal -->
+    <div class="music-modal" id="musicModal">
+        <div class="modal-bg-blur" id="modalBgBlur"></div>
+        <div class="modal-header">
+            <button class="close-modal-btn" onclick="closeMusicModal()">↓</button>
+            <div class="now-playing-tag">Now Playing</div>
+            <button class="close-modal-btn" style="opacity: 0">↓</button>
+        </div>
+
+        <div class="modal-content">
+            <div class="album-art-container">
+                <img id="modalPoster" src="" alt="">
+            </div>
+            <div class="song-details" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 id="modalTitle">Title</h2>
+                    <p id="modalArtist">Artist</p>
+                </div>
+                <button class="modal-control-btn heart-btn" onclick="this.classList.toggle('active')" title="Favorite">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width: 24px; height: 24px;">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" onclick="seek(event)">
+                    <div class="progress-fill" id="progressFill">
+                        <div class="progress-dot"></div>
+                    </div>
+                </div>
+                <div class="time-labels">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+            <div class="modal-controls">
+                <button class="modal-control-btn" onclick="toggleShuffle()" id="shuffleBtn" title="Shuffle">
+                    <img src="./assets/images/arrow.png" alt="Shuffle" class="control-img" style="opacity: 0.7;">
+                </button>
+                <button class="modal-control-btn" onclick="playPrevious()" title="Previous">
+                    <img src="./assets/images/backward.png" alt="Prev" class="control-img">
+                </button>
+                <button class="modal-control-btn modal-play-btn" id="modalPlayBtn" onclick="togglePlay()"
+                    title="Play/Pause">
+                    <img src="./assets/images/play.png" alt="Play" class="control-img">
+                </button>
+                <button class="modal-control-btn" onclick="playNext()" title="Next">
+                    <img src="./assets/images/forwad.png" alt="Next" class="control-img">
+                </button>
+                <button class="modal-control-btn" onclick="toggleRepeat()" id="repeatBtn" title="Repeat">
+                    <svg class="control-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; opacity: 0.7;">
+                        <polyline points="17 1 21 5 17 9"></polyline>
+                        <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                        <polyline points="7 23 3 19 7 15"></polyline>
+                        <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer">
+        <source src="" type="audio/mpeg">
+    </audio>
 
     <footer class="main-footer">
         <div style="margin-bottom: 20px;">
@@ -74,6 +175,145 @@
         <p class="footer-text">&copy; 2025 IndiGo Inflight Service | All rights reserved</p>
     </footer>
 
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playerBar = document.getElementById('playerBar');
+        const musicModal = document.getElementById('musicModal');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const modalPlayBtn = document.getElementById('modalPlayBtn');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+
+        function openBook(url, title) {
+            if (!audio.paused) {
+                const keepPlaying = confirm(`Do you want to keep playing music while reading "${title}"?`);
+                if (!keepPlaying) {
+                    audio.pause();
+                    saveAudioState();
+                }
+            }
+            window.open(url, '_blank');
+        }
+
+        function saveAudioState() {
+            const state = JSON.parse(localStorage.getItem('audioState') || '{}');
+            state.currentTime = audio.currentTime;
+            state.isPlaying = !audio.paused;
+            localStorage.setItem('audioState', JSON.stringify(state));
+        }
+
+        function loadAudioState() {
+            const saved = localStorage.getItem('audioState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                if (state.src) {
+                    document.getElementById('currentPoster').src = state.poster;
+                    document.getElementById('currentTitle').innerText = state.title;
+                    document.getElementById('currentArtist').innerText = state.artist;
+                    document.getElementById('modalPoster').src = state.poster;
+                    document.getElementById('modalTitle').innerText = state.title;
+                    document.getElementById('modalArtist').innerText = state.artist;
+                    document.getElementById('modalBgBlur').style.backgroundImage = `url('${state.poster}')`;
+
+                    audio.src = state.src;
+                    audio.currentTime = state.currentTime;
+                    playerBar.style.display = 'flex';
+
+                    if (state.isPlaying) {
+                        audio.play().catch(e => console.log("Auto-resume blocked"));
+                    } else {
+                        updateButtons(false);
+                    }
+                }
+            }
+        }
+
+        function updateButtons(isPlaying) {
+            const icon = isPlaying ? './assets/images/pause.png' : './assets/images/play.png';
+            playPauseBtn.querySelector('img').src = icon;
+            modalPlayBtn.querySelector('img').src = icon;
+            if (isPlaying) {
+                playerBar.classList.add('playing');
+                playPauseBtn.classList.add('is-playing');
+                modalPlayBtn.classList.add('is-playing');
+            } else {
+                playerBar.classList.remove('playing');
+                playPauseBtn.classList.remove('is-playing');
+                modalPlayBtn.classList.remove('is-playing');
+            }
+        }
+
+        function togglePlay() {
+            if (audio.src) {
+                if (audio.paused) audio.play();
+                else audio.pause();
+                saveAudioState();
+            }
+        }
+
+        function stopMusic() {
+            audio.pause();
+            playerBar.style.display = 'none';
+            playerBar.classList.remove('playing');
+            localStorage.removeItem('audioState');
+        }
+
+        function openMusicModal() {
+            musicModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMusicModal() {
+            musicModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        audio.ontimeupdate = () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = percent + '%';
+            currentTimeEl.innerText = formatTime(audio.currentTime);
+            if (!isNaN(audio.duration)) {
+                durationEl.innerText = formatTime(audio.duration);
+            }
+            if (!audio.paused) saveAudioState();
+        };
+
+        function seek(e) {
+            const bar = document.getElementById('progressBar');
+            const rect = bar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+            saveAudioState();
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        audio.onplay = () => {
+            updateButtons(true);
+            document.getElementById('playingBars').style.display = 'flex';
+            saveAudioState();
+        };
+
+        audio.onpause = () => {
+            updateButtons(false);
+            document.getElementById('playingBars').style.display = 'none';
+            saveAudioState();
+        };
+
+        window.onload = loadAudioState;
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'stopMusic') {
+                audio.pause();
+                saveAudioState();
+            }
+        });
+    </script>
 </body>
 
 </html>
