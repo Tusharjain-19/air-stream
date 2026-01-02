@@ -1,0 +1,232 @@
+Running AirStream on Raspberry Pi (Beginner Guide)
+
+This guide explains how to run AirStream – Offline In-Flight Entertainment System on a Raspberry Pi.
+It is written for first-time users, so no prior Raspberry Pi or Linux experience is required.
+
+What You Need (Hardware)
+
+Raspberry Pi (Raspberry Pi 3, 4, or 5 recommended)
+
+microSD Card (16 GB or more)
+
+microSD Card reader (USB)
+
+Power adapter for Raspberry Pi
+
+Laptop / PC
+
+One or more mobile phones for testing
+
+Optional: USB keyboard and HDMI monitor
+(You can also use SSH later)
+
+Step 1: Install Raspberry Pi OS
+
+On your laptop, download Raspberry Pi Imager
+https://www.raspberrypi.com/software/
+
+Insert the microSD card into your laptop.
+
+Open Raspberry Pi Imager and select:
+
+Device: Raspberry Pi (your model)
+
+OS: Raspberry Pi OS (64-bit recommended)
+
+Storage: Your microSD card
+
+Click Write and wait for completion.
+
+Safely eject the microSD card.
+
+Step 2: First Boot of Raspberry Pi
+
+Insert the microSD card into Raspberry Pi.
+
+Connect:
+
+HDMI cable to monitor
+
+Keyboard
+
+Power ON the Raspberry Pi.
+
+Complete the initial setup:
+
+Language
+
+Time zone
+
+Username and password
+
+Wi-Fi (optional for setup)
+
+Once done, you will see the Raspberry Pi desktop.
+
+Step 3: Update Raspberry Pi
+
+Open Terminal on Raspberry Pi and run:
+
+sudo apt update
+sudo apt upgrade -y
+
+
+This ensures your system is up to date.
+
+Step 4: Install Required Software
+Install Python (usually preinstalled)
+
+Check Python version:
+
+python3 --version
+
+
+If not installed:
+
+sudo apt install python3 -y
+
+Step 5: Copy AirStream Project to Raspberry Pi
+Option A: Using Git (Recommended)
+
+Open Terminal on Raspberry Pi.
+
+Clone the repository:
+
+git clone https://github.com/Tusharjain-19/air-stream.git
+
+
+Go into the project folder:
+
+cd air-stream
+
+Option B: Manual Copy (Beginner Friendly)
+
+Download ZIP from GitHub on your laptop.
+
+Extract the ZIP.
+
+Copy the folder to a USB drive.
+
+Plug USB into Raspberry Pi.
+
+Copy folder to Desktop or Home directory.
+
+Step 6: Add Media Content (Local Only)
+
+For legal and privacy reasons, the GitHub repository does not include movies or music.
+
+You must add your own test files locally.
+
+Example:
+
+air-stream/
+└── assets/
+    ├── videos/
+    │   └── list all movies
+    ├── audio/
+    │   └── song.mp3
+
+
+Use small test files for smooth playback.
+
+Step 7: Start the AirStream Server
+
+From inside the project folder, run:
+
+python3 -m http.server 8000
+
+
+You should see:
+
+Serving HTTP on 0.0.0.0 port 8000
+
+
+Do not close this terminal.
+
+Step 8: Connect Devices to Raspberry Pi
+Option A: Use Raspberry Pi as Wi-Fi Hotspot (Advanced)
+
+For production or advanced setup:
+
+Configure Raspberry Pi as a Wi-Fi Access Point
+
+Use hostapd and dnsmasq
+
+(This is optional and can be added later.)
+
+Option B: Simple Testing (Recommended for First Time)
+
+Connect Raspberry Pi to any Wi-Fi network.
+
+Find Raspberry Pi IP address:
+
+hostname -I
+
+
+Example output:
+
+192.168.1.120
+
+Step 9: Access AirStream on Phone
+
+Connect phone to the same Wi-Fi network.
+
+Open browser.
+
+Enter:
+
+http://<RaspberryPi_IP>:8000
+
+
+Example:
+
+http://192.168.1.120:8000
+
+
+The AirStream homepage will load.
+
+Step 10: Offline In-Flight Simulation (Optional)
+
+To simulate real inflight behavior:
+
+Turn Airplane Mode ON on phone
+
+Keep Wi-Fi ON
+
+Reload the page
+
+If content loads, AirStream is working offline correctly.
+
+Common Problems & Fixes
+Website does not open
+
+Ensure server is running
+
+Check IP address again
+
+Confirm phone and Raspberry Pi are on same network
+
+Videos not playing
+
+Ensure files are in correct assets/videos/ folder
+
+Use .mp4 format
+
+Avoid very large files during testing
+
+Why Raspberry Pi is Used
+
+Low power consumption
+
+Small size (aircraft-friendly)
+
+Works completely offline
+
+Cost-effective
+
+Ideal for MVP and scalable deployment
+
+Disclaimer
+
+This project is an educational prototype.
+It is not affiliated with any airline and is intended for learning and demonstration purposes only.
