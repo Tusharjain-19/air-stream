@@ -444,7 +444,64 @@ body.dark-mode .hero::after {
     margin-bottom: 8px;
 }
 
+/* Active Playing State */
+.card.playing {
+    border: 2px solid var(--brand-accent) !important;
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 51, 160, 0.2);
+}
+
+.card.playing::after {
+    content: 'NOW PLAYING';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--brand-accent);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.playing-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    margin-left: 8px;
+}
+
+.playing-bars span {
+    width: 2px;
+    height: 100%;
+    background: var(--brand-accent);
+    animation: bounce 0.8s ease-in-out infinite alternate;
+}
+
+.playing-bars span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.playing-bars span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    from {
+        height: 3px;
+    }
+
+    to {
+        height: 12px;
+    }
+}
+
 /* Floating Pill Music Player */
+/* Base Player Bar (Mini Player) */
 .player-bar {
     position: fixed;
     bottom: 25px;
@@ -463,33 +520,92 @@ body.dark-mode .hero::after {
     border-radius: 99px;
     border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 12px 30px rgba(0, 30, 100, 0.15);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.player-bar:hover {
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 30, 100, 0.25);
+    background: rgba(255, 255, 255, 0.85);
 }
 
 body.dark-mode .player-bar {
-    background: rgba(15, 23, 42, 0.75);
+    background: rgba(15, 23, 42, 0.8);
     border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .player-bar:hover {
+    background: rgba(30, 41, 59, 0.9);
 }
 
 .player-info {
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: unset;
     flex: 1;
     overflow: hidden;
 }
 
 .player-info img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid white;
+    border: 2px solid var(--brand-accent);
+    animation: rotate 10s linear infinite;
+    animation-play-state: paused;
 }
 
-body.dark-mode .player-info img {
-    border-color: var(--brand-accent);
+.player-bar.playing .player-info img {
+    animation-play-state: running;
+    box-shadow: 0 0 15px var(--brand-accent);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Playing Bars Animation */
+.playing-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    margin-left: 8px;
+}
+
+.playing-bars span {
+    width: 2px;
+    background: var(--brand-accent);
+    animation: bounce 1s ease-in-out infinite;
+}
+
+.playing-bars span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.playing-bars span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        height: 4px;
+    }
+
+    50% {
+        height: 12px;
+    }
 }
 
 .player-text {
@@ -498,7 +614,7 @@ body.dark-mode .player-info img {
 }
 
 #currentTitle {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-main);
     text-overflow: ellipsis;
@@ -506,64 +622,57 @@ body.dark-mode .player-info img {
 }
 
 #currentArtist {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
 .player-controls {
-    flex: 0;
     display: flex;
     align-items: center;
-}
-
-.player-nav {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 
 .control-btn {
-    background: transparent;
-    color: var(--brand-primary);
+    background: none;
     border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    color: var(--brand-primary);
+    font-size: 1.2rem;
     cursor: pointer;
+    transition: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    transition: var(--transition);
 }
 
 body.dark-mode .control-btn {
     color: var(--brand-accent);
 }
 
-.control-btn:hover {
-    background: rgba(0, 51, 160, 0.05);
-}
-
-/* Hide native audio but keep logic */
-#audioPlayer {
-    display: none;
-}
-
 .play-pause-btn {
+    width: 44px;
+    height: 44px;
     background: var(--brand-primary);
-    color: white !important;
-    font-size: 0.9rem;
-    width: 38px;
-    height: 38px;
-    box-shadow: 0 4px 10px rgba(0, 51, 160, 0.2);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 51, 160, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-pause-btn .control-img {
+    filter: brightness(0) invert(1) !important;
+    width: 20px !important;
+    height: 20px !important;
 }
 
 body.dark-mode .play-pause-btn {
     background: var(--brand-accent);
-    color: var(--brand-primary) !important;
+}
+
+body.dark-mode .play-pause-btn .control-img {
+    filter: brightness(0) !important;
 }
 
 .close-player {
@@ -572,19 +681,421 @@ body.dark-mode .play-pause-btn {
     color: var(--text-muted);
     margin-left: 10px;
     opacity: 0.6;
+    transition: 0.3s;
 }
 
 .close-player:hover {
     opacity: 1;
+    color: #ef4444;
 }
 
-/* Footer */
+/* Full Screen Player Modal */
+.music-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: var(--bg-page);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.music-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+.modal-bg-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(80px) brightness(0.3) grayscale(1);
+    z-index: -1;
+    opacity: 0.8;
+    transition: background-image 0.8s ease;
+    transform: scale(1.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    color: white;
+}
+
+.modal-header .now-playing-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 800;
+    opacity: 0.9;
+}
+
+.close-modal-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.modal-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.album-art-container {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    margin-bottom: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.album-art-container:hover {
+    transform: scale(1.02);
+}
+
+.album-art-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.song-details {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 35px;
+}
+
+.song-details h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: white;
+    letter-spacing: -0.5px;
+}
+
+.song-details p {
+    font-size: 1.1rem;
+    color: var(--brand-accent);
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+/* Progress Slider */
+.progress-container {
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 10px;
+    width: 0%;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+.progress-dot {
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.progress-bar:hover .progress-dot {
+    opacity: 1;
+}
+
+.progress-bar:hover .progress-fill {
+    background: #fff;
+}
+
+.time-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* Controls */
+.modal-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 40px 0;
+    gap: 25px;
+}
+
+.modal-control-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+}
+
+.modal-control-btn:hover {
+    opacity: 1;
+}
+
+.modal-play-btn {
+    opacity: 1 !important;
+}
+
+.control-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s, opacity 0.3s;
+}
+
+/* Center Modal Play Button Icon (Clean Monochrome) */
+.modal-play-btn .control-img {
+    width: 44px;
+    height: 44px;
+    filter: brightness(0) !important;
+    /* Absolute Black on White Circle */
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Optical centering for the Triangle Play icon */
+.modal-play-btn:not(.is-playing) .control-img {
+    margin-left: 6px;
+}
+
+/* Mini Player Play Icon Centering */
+.play-pause-btn:not(.is-playing) .control-img {
+    margin-left: 4px;
+}
+
+/* Modal Side Controls (Pure White) */
+.modal-control-btn:not(.modal-play-btn) .control-img,
+.music-modal svg {
+    filter: brightness(0) invert(1) !important;
+    opacity: 0.85;
+}
+
+.modal-control-btn:hover .control-img,
+.modal-control-btn:hover svg {
+    opacity: 1 !important;
+    transform: scale(1.1);
+}
+
+/* Small Player Controls (Monochrome) */
+.control-btn .control-img {
+    width: 22px;
+    height: 22px;
+}
+
+/* Mini Player Play/Pause Button */
+.play-pause-btn {
+    width: 48px;
+    height: 48px;
+    background: #000 !important;
+    /* Pure Black Circle */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+body.dark-mode .play-pause-btn {
+    background: #fff !important;
+    /* Pure White in Dark Mode */
+}
+
+/* Icons inside mini-player play button */
+.play-pause-btn .control-img {
+    filter: brightness(0) invert(1) !important;
+    /* White icon on black */
+    width: 24px !important;
+    height: 24px !important;
+}
+
+body.dark-mode .play-pause-btn .control-img {
+    filter: brightness(0) !important;
+    /* Black icon on white */
+}
+
+/* Progress bar and other accents should be white/grey */
+.progress-fill {
+    background: #fff !important;
+}
+
+.playing-bars span {
+    background: #fff !important;
+}
+
+.card-tag {
+    background: #000 !important;
+}
+
+.card.playing {
+    border-color: #000 !important;
+}
+
+body.dark-mode .card.playing {
+    border-color: #fff !important;
+}
+
+.card.playing::after {
+    background: #000 !important;
+}
+
+.modal-control-btn:hover .control-img {
+    transform: scale(1.15);
+    opacity: 1 !important;
+}
+
+.modal-control-btn.active .control-img,
+.modal-control-btn.active svg {
+    filter: brightness(0) invert(1) !important;
+    color: #fff !important;
+    opacity: 1 !important;
+    transform: scale(1.1);
+}
+
+.heart-btn.active svg {
+    fill: #fff !important;
+    stroke: #fff !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.modal-play-btn {
+    width: 70px;
+    height: 70px;
+    background: white !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.modal-play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal-play-btn:active {
+    transform: scale(0.95);
+}
+
+.secondary-controls {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0 10%;
+}
+
+.secondary-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.secondary-btn:hover {
+    color: white;
+}
+
+.secondary-btn.active {
+    color: #fff;
+    font-weight: 700;
+    position: relative;
+}
+
+.secondary-btn.active::after {
+    content: '•';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Footer Update */
 .main-footer {
-    padding: 60px 4%;
+    padding: 60px 4% 120px;
     background-color: var(--white);
     text-align: center;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
+
 
 /* Media Queries */
 @media (max-width: 1024px) {
