@@ -154,6 +154,9 @@
     </footer>
     <script>
         function playVideo(src) {
+            // Signal music to stop via localStorage
+            localStorage.setItem('stopMusic', Date.now());
+
             const container = document.getElementById('videoContainer');
             const player = document.getElementById('player');
             player.src = src;
